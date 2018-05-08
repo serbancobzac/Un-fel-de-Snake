@@ -1,6 +1,8 @@
 $(document).ready(function () {
     var mySquare = $("#mySquare");
+    var gameBoard = $("#game-board")
     var keys = {};
+    var keysArray = Object.keys(keys);
     var direction = {
         37: { left: "-=2" }, //left
         38: { top: "-=2" }, //up
@@ -8,7 +10,6 @@ $(document).ready(function () {
         40: { top: "+=2" }, //down
     };
     var going;
-    var keysArray = Object.keys(keys);
     
 
     $(document).one("keydown", moveSquare);
@@ -40,11 +41,28 @@ $(document).ready(function () {
         }
 
         function keepGoing() {
-            if (keysArray.length === 2)
-                mySquare.css(direction[keysArray[0]]).css(direction[keysArray[1]]);
-            else {
+            if(canMove(keysArray[0])) {
                 mySquare.css(direction[keysArray[0]]);
             }
+            if (keysArray.length === 2 && canMove(keysArray[1])) {
+                mySquare.css(direction[keysArray[1]]);
+            }
+        }
+
+        function canMove(key) {
+            if (key === "37" && mySquare.offset().left - 2 < 10) {
+                return false;
+            }
+            if (key === "38" && mySquare.offset().top - 2 < 10) {
+                return false;
+            }
+            if (key === "39" && mySquare.offset().left + mySquare.width() + 2 > gameBoard.width() + 10) {
+                return false;
+            }
+            if (key === "40" && mySquare.offset().top + mySquare.height() + 2 > gameBoard.height() + 10) {
+                return false;
+            }
+            return true;
         }
     }
 

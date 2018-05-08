@@ -5,17 +5,28 @@ html, body, div {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
-  }
-  
-  body {
+}
+
+body {
     background: #20262E;
-  }
-  
-  *, *:before, *:after {
+}
+
+*, *:before, *:after {
     box-sizing: border-box;
-  }
-  
-  #game-board {
+}
+
+#game-board {
     background: #ffffff;
     min-height: 100vh;
-  }
+    border: 10px solid black;
+    position: relative;
+}
+
+#mySquare {
+    position: absolute;
+    background: blue;
+    width: 40px;
+    height: 40px;
+    left: 10px;
+    top: 10px;
+}

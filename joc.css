@@ -1,0 +1,21 @@
+html, body, div {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+  
+  body {
+    background: #20262E;
+  }
+  
+  *, *:before, *:after {
+    box-sizing: border-box;
+  }
+  
+  #game-board {
+    background: #ffffff;
+    min-height: 100vh;
+  }

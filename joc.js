@@ -1,15 +1,21 @@
 $(document).ready(function () {
-    var mySquare = $("#mySquare");
+    var mySquare = $("#my-square");
     var gameBoard = $("#game-board")
     var keys = {};
+    var speed = 10;
     var keysArray = Object.keys(keys);
     var direction = {
-        37: { left: "-=2" }, //left
-        38: { top: "-=2" }, //up
-        39: { left: "+=2" }, //right
-        40: { top: "+=2" }, //down
+        37: { left: "-=" + speed }, //left
+        38: { top: "-=" + speed }, //up
+        39: { left: "+=" + speed}, //right
+        40: { top: "+=" + speed}, //down
     };
-    var going;
+    var moving;
+
+    var redBalls = [];
+    var redBallsInterval = setInterval(generateRedBall, 300);
+    var yellowBallsInterval;
+    var blackBallsInterval;
     
 
     $(document).one("keydown", moveSquare);
@@ -17,8 +23,6 @@ $(document).ready(function () {
     $(document).keydown(function (e) {
         keys[e.which] = true;
         keysArray = Object.keys(keys);
-        
-        // printKeys();
     });
 
     $(document).keyup(function (e) {
@@ -26,21 +30,19 @@ $(document).ready(function () {
         keysArray = Object.keys(keys);
 
         if(Object.keys(keys).length === 0) {
-            clearInterval(going);
+            clearInterval(moving);
         }
-
-        // printKeys();
     });
 
     function moveSquare() {
         $(document).one("keydown", moveSquare);
 
         if (keysArray.length === 2 || keysArray.length === 1) {
-            clearInterval(going);
-            going = setInterval(keepGoing, 1);
+            clearInterval(moving);
+            moving = setInterval(keepMoving, 1);
         }
 
-        function keepGoing() {
+        function keepMoving() {
             if(canMove(keysArray[0])) {
                 mySquare.css(direction[keysArray[0]]);
             }
@@ -50,23 +52,43 @@ $(document).ready(function () {
         }
 
         function canMove(key) {
-            if (key === "37" && mySquare.offset().left - 2 < 10) {
+            if (key === "37" && mySquare.offset().left - speed < 10) {
                 return false;
             }
-            if (key === "38" && mySquare.offset().top - 2 < 10) {
+            if (key === "38" && mySquare.offset().top - speed < 10) {
                 return false;
             }
-            if (key === "39" && mySquare.offset().left + mySquare.width() + 2 > gameBoard.width() + 10) {
+            if (key === "39" && mySquare.offset().left + mySquare.width() + speed > gameBoard.width() + 10) {
                 return false;
             }
-            if (key === "40" && mySquare.offset().top + mySquare.height() + 2 > gameBoard.height() + 10) {
+            if (key === "40" && mySquare.offset().top + mySquare.height() + speed > gameBoard.height() + 10) {
                 return false;
             }
             return true;
         }
     }
 
-    function printKeys() {
-        console.log(Object.keys(keys).length);
+    function generateRedBall() {
+        var ballSize = "100";
+        var color = "red";
+        $newBall = $("<div/>").css({
+            "width": ballSize + "px",
+            "height": ballSize + "px",
+            "border-radius": "50%",
+            "background": color
+        });
+
+        var posX = (Math.random() * ($(gameBoard).width() - ballSize)).toFixed();
+        var posY = (Math.random() * ($(gameBoard).height() - ballSize)).toFixed();
+
+        $newBall.css({
+            "position": "absolute",
+            "left": posX + "px",
+            "top": posY + "px",
+            "display": "none"
+        }).appendTo(gameBoard).fadeIn(100);
+
+        if (redBalls.length >= 11) clearInterval(redBallsInterval);
+        else redBalls.push($newBall);
     }
 });

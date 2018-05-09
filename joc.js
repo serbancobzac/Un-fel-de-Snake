@@ -1,8 +1,8 @@
 $(document).ready(function () {
     var mySquare = $("#my-square");
-    var gameBoard = $("#game-board")
+    var gameBoard = $("#game-board");
     var keys = {};
-    var speed = 10;
+    var speed = 7;
     var keysArray = Object.keys(keys);
     var direction = {
         37: { left: "-=" + speed }, //left
@@ -12,10 +12,15 @@ $(document).ready(function () {
     };
     var moving;
 
-    var redBalls = [];
-    var redBallsInterval = setInterval(generateRedBall, 300);
-    var yellowBallsInterval;
-    var blackBallsInterval;
+    var redBalls = 0;
+    var redBallsInterval = setInterval(function () {
+        redBalls = generateBall("#red-balls", "red", redBalls, 12);
+    }, 300);
+    var yellowBalls = 0;
+    var yellowBallsInterval = setInterval(function () {
+        yellowBalls = generateBall("#yellow-balls", "yellow", yellowBalls, 5);
+    }, 600);
+    // var blackBallsInterval;
     
 
     $(document).one("keydown", moveSquare);
@@ -68,27 +73,73 @@ $(document).ready(function () {
         }
     }
 
-    function generateRedBall() {
-        var ballSize = "100";
-        var color = "red";
-        $newBall = $("<div/>").css({
-            "width": ballSize + "px",
-            "height": ballSize + "px",
-            "border-radius": "50%",
-            "background": color
+    function generateBall(here, _color, nrOfBalls, max) {
+        if (nrOfBalls < max) {
+            var ballSize = "150";
+
+            newBall = $("<div/>").css({
+                "width": ballSize + "px",
+                "height": ballSize + "px",
+                "border-radius": "50%",
+                "background": _color
+            });
+
+            var posX = (Math.random() * (gameBoard.width() - ballSize)).toFixed();
+            var posY = (Math.random() * (gameBoard.height() - ballSize)).toFixed();
+
+            newBall.css({
+                "position": "absolute",
+                "left": posX + "px",
+                "top": posY + "px",
+                "display": "none"
+            }).appendTo($(here)).fadeIn(100);
+
+            nrOfBalls += 1;
+        }
+
+        return nrOfBalls;
+    }
+
+    var isColliding = (function () {
+        function getPositions(elem) {
+            var pos, width, height;
+            pos = $(elem).position();
+            width = $(elem).width();
+            height = $(elem).height();
+            return [ [pos.left, pos.left + width], [pos.top, pos.top + height] ];
+        }
+    
+        function comparePositions(pos1, pos2) {
+            var r1, r2;
+            r1 = pos1[0] < pos2[0] ? pos1 : pos2;
+            r2 = pos1[0] < pos2[0] ? pos2 : pos1;
+            return r1[1] > r2[0] || r1[0] === r2[0];
+        }
+    
+        return function ( elem1, elem2 ) {
+            var pos1 = getPositions( elem1 ),
+                pos2 = getPositions( elem2 );
+            return comparePositions(pos1[0], pos2[0]) && comparePositions(pos1[1], pos2[1]);
+        };
+    }());
+
+    function detectCollisions(thisBalls, nrOfBalls) {
+        $(thisBalls).children()
+        .map(function (i) {
+            if (isColliding(mySquare, this)) {
+                $(thisBalls + " div:nth-child(" + (i + 1) + ")").remove();
+                nrOfBalls -= 1;
+            }
         });
 
-        var posX = (Math.random() * ($(gameBoard).width() - ballSize)).toFixed();
-        var posY = (Math.random() * ($(gameBoard).height() - ballSize)).toFixed();
-
-        $newBall.css({
-            "position": "absolute",
-            "left": posX + "px",
-            "top": posY + "px",
-            "display": "none"
-        }).appendTo(gameBoard).fadeIn(100);
-
-        if (redBalls.length >= 11) clearInterval(redBallsInterval);
-        else redBalls.push($newBall);
+        return nrOfBalls;
     }
+
+    var redBallsCollision = setInterval(function () {
+        detectCollisions("#red-balls", redBalls);
+    }, 50);
+
+    var yellowBallsCollision = setInterval(function () {
+        detectCollisions("#yellow-balls", yellowBalls);
+    }, 50);
 });

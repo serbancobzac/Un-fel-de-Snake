@@ -137,17 +137,7 @@ $(document).ready(function () {
                 $(thisBalls + " div:nth-child(" + (i + 1) + ")").remove();
                 
                 if (thisBalls === "#red-balls") redBalls -= 1;
-                else{
-                    yellowBalls -= 1;
-
-                    var posX = (Math.random() * (gameBoard.width() - ballSize)).toFixed();
-                    var posY = (Math.random() * (gameBoard.height() - ballSize)).toFixed();
-
-                    $("#red-balls div:nth-child(" + ((Math.random() * (redBalls - 1)).toFixed() + 1) + ")").css({
-                        "left": posX + "px",
-                        "top": posY + "px"
-                    });
-                }
+                else yellowBalls -= 1;
             }
         });
     }

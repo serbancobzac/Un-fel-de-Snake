@@ -1,72 +1,40 @@
-var ball = function(options) {
-    //attributes
-    var vars = {
-        id: undefined,
-        color: undefined,
-        posX: undefined,
-        posY: undefined,
-        visible: false,
-        size: 100
-    };
+class Ball {
+    constructor(id, color, posX, posY, visible) {
+        this.id = id;
+        this.color = color;
+        this.posX = posX;
+        this.posY = posY;
+        this.visible = visible;
+    }
 
-    var root = this;
+    static get size() {
+        return 100;
+    }
+}
 
-    //constructor
-    this.construct = function(options) {
-        $.extend(vars, options);
-    };
-
-    this.construct(options);
-
-    //public methods
-
-    this.getId = function() {
-        return vars.id;
-    };
-    this.getColor = function() {
-        return vars.color;
-    };
-    this.getPosX = function() {
-        return vars.posX;
-    };
-    this.getPosY = function() {
-        return vars.posY;
-    };
-    this.getVisible = function() {
-        return vars.visible;
-    };
-    this.getSize = function() {
-        return vars.size;
-    };
-};
-
-function addBalls(_id, _color, _number, location) {
+function addBalls(id, color, number, location) {
     var i;
-    var newBalls = [];
-    var ballSize = new ball().getSize();
-    for (i = 0; i < _number; ++i) {
-        newBalls.push(
-            new ball({
-                id: _id + i,
-                color: _color,
-                posX: (Math.random() * (gameBoard.width() - ballSize)).toFixed(),
-                posY: (Math.random() * (gameBoard.height() - ballSize)).toFixed(),
-                visible: true
-            })
-        );
-        addBallToHtml(newBalls[i], location);
+    var newBalls = [], newBall;
+    var posX, posY;
+    for (i = 0; i < number; ++i) {
+        posX = (Math.random() * (gameBoard.width() - Ball.size)).toFixed();
+        posY = (Math.random() * (gameBoard.height() - Ball.size)).toFixed();
+
+        newBall = new Ball(id + i, color, posX, posY, true);
+        newBalls.push(newBall);
+        addBallToHtml(newBall, location);
     }
     return newBalls;
 }
 
 function addBallToHtml(ball, location) {
     newBall = $("<div/>").css({
-        "width": ball.getSize() + "px",
-        "height": ball.getSize() + "px",
+        "width": Ball.size + "px",
+        "height": Ball.size + "px",
         "border-radius": "50%",
-        "background": ball.getColor(),
+        "background": ball.color,
         "position": "absolute",
-        "left": ball.getPosX() + "px",
-        "top": ball.getPosY() + "px",
-    }).attr("id", ball.getId()).appendTo(location);
+        "left": ball.posX + "px",
+        "top": ball.posY + "px",
+    }).attr("id", ball.id).appendTo(location);
 }

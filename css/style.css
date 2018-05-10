@@ -21,12 +21,3 @@ body {
     border: 10px solid black;
     position: relative;
 }
-
-#square {
-    position: absolute;
-    background: blue;
-    width: 40px;
-    height: 40px;
-    left: 50%;
-    top: 50%;
-}

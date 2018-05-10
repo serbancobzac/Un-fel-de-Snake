@@ -22,7 +22,7 @@ body {
     position: relative;
 }
 
-#my-square {
+#square {
     position: absolute;
     background: blue;
     width: 40px;

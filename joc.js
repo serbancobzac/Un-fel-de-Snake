@@ -12,14 +12,16 @@ $(document).ready(function () {
     };
     var moving;
 
+    var ballSize = 150;
+    var nrOfBalls = 0;
     var redBalls = 0;
     var redBallsInterval = setInterval(function () {
-        redBalls = generateBall("#red-balls", "red", redBalls, 12);
-    }, 300);
+        generateBall("#red-balls", "red", 4);
+    }, 1000);
     var yellowBalls = 0;
     var yellowBallsInterval = setInterval(function () {
-        yellowBalls = generateBall("#yellow-balls", "yellow", yellowBalls, 5);
-    }, 600);
+        generateBall("#yellow-balls", "yellow", 2);
+    }, 2000);
     // var blackBallsInterval;
     
 
@@ -73,9 +75,9 @@ $(document).ready(function () {
         }
     }
 
-    function generateBall(here, _color, nrOfBalls, max) {
+    function generateBall(here, _color, max) {
+        nrOfBalls = _color === "red" ? redBalls : yellowBalls;
         if (nrOfBalls < max) {
-            var ballSize = "150";
 
             newBall = $("<div/>").css({
                 "width": ballSize + "px",
@@ -94,10 +96,15 @@ $(document).ready(function () {
                 "display": "none"
             }).appendTo($(here)).fadeIn(100);
 
-            nrOfBalls += 1;
+            if (_color === "red") redBalls += 1;
+            else yellowBalls += 1;
         }
-
-        return nrOfBalls;
+        else if (_color === "yellow") {
+            $("#yellow-balls div:nth-child(" + (Math.random() * (yellowBalls - 1)).toFixed() + ")").css({
+                "width": "+=30",
+                "height": "+=30",
+            });
+        }
     }
 
     var isColliding = (function () {
@@ -123,23 +130,33 @@ $(document).ready(function () {
         };
     }());
 
-    function detectCollisions(thisBalls, nrOfBalls) {
+    function detectCollisions(thisBalls) {
         $(thisBalls).children()
         .map(function (i) {
             if (isColliding(mySquare, this)) {
                 $(thisBalls + " div:nth-child(" + (i + 1) + ")").remove();
-                nrOfBalls -= 1;
+                
+                if (thisBalls === "#red-balls") redBalls -= 1;
+                else{
+                    yellowBalls -= 1;
+
+                    var posX = (Math.random() * (gameBoard.width() - ballSize)).toFixed();
+                    var posY = (Math.random() * (gameBoard.height() - ballSize)).toFixed();
+
+                    $("#red-balls div:nth-child(" + ((Math.random() * (redBalls - 1)).toFixed() + 1) + ")").css({
+                        "left": posX + "px",
+                        "top": posY + "px"
+                    });
+                }
             }
         });
-
-        return nrOfBalls;
     }
 
     var redBallsCollision = setInterval(function () {
-        detectCollisions("#red-balls", redBalls);
-    }, 50);
+        detectCollisions("#red-balls");
+    }, 25);
 
     var yellowBallsCollision = setInterval(function () {
-        detectCollisions("#yellow-balls", yellowBalls);
-    }, 50);
+        detectCollisions("#yellow-balls");
+    }, 25);
 });

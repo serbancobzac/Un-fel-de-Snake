@@ -20,4 +20,22 @@ body {
     min-height: 100vh;
     border: 10px solid black;
     position: relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+#stats {
+    padding: 10px 5% 0 0;
+    font-size: 20pt;
+    float: right;
+    position: relative;
+    margin-left: auto;
+    margin-bottom: auto;
+    z-index: 1000;
+}
+
+#game-over {
+    position: absolute;
+    font-size: 50pt;
 }

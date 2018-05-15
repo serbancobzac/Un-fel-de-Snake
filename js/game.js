@@ -14,26 +14,28 @@ var gameBoard = $("#game-board");
 var square = {
     id: "square", 
     color: "blue", 
-    speed: 10, 
+    speed: 4, 
+    posX: null,
+    posY: null,
     size: 40, 
     location: gameBoard
 };
 
 var redBalls = {
     balls: [],
-    number: 5,
+    number: 7,
     color: "red",
     generate: null,
-    generateTime: 500,
+    generateTime: 600,
     collision: null,
     location: "#red-balls"
 };
 var yellowBalls = {
     balls: [],
-    number: 15,
+    number: 14,
     color: "yellow",
     generate: null,
-    generateTime: 250,
+    generateTime: 500,
     collision: null,
     grow: null,
     growth: 25,
@@ -59,7 +61,7 @@ function initializeEverything() {
     addBalls(redBalls);
     addBalls(yellowBalls);
     addBalls(blackBalls);
-    square = addSquare("square", "blue", 10, 40, gameBoard);
+    addSquare(square);
     $("#score").text(stats.score);
     $("#lives").text(stats.lives);
     $("#time").text(stats.time);
@@ -104,7 +106,7 @@ function startCollision(balls, time) {
                     let randomPos;
                     do {
                         randomPos = Math.floor((Math.random() * redBalls.number));
-                    } while (redBalls.balls[randomPos].visible === false);
+                    } while (redBalls.balls[randomPos].visible === false); //eroare aici daca dau intr'o bila galbena si nu mai sunt rosii vizibile
                     checkCollisionWithBalls(redBalls, randomPos);
 
                     balls.balls[i].size = Ball.size;
@@ -189,10 +191,15 @@ function endGame() {
     clearInterval(yellowBalls.grow);
     clearInterval(blackBalls.collision);
     clearInterval(stats.timeInterval);
+    clearInterval(moving);
+    
+    $(document).unbind("keydown");
+    $(document).unbind("keyup");
 
     $("#red-balls").remove();
     $("#yellow-balls").remove();
     $("#black-balls").remove();
+    $("#square").remove();
 
     $("<div>Gata boss</div>").attr("id", "game-over").appendTo(gameBoard);
 }

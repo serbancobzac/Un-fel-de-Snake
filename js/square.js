@@ -11,22 +11,14 @@ class Square {
 
 // Add square
 
-    function addSquare(id, color, speed, size, location) {
-        var newSquare = new Square(
-            id,
-            color,
-            Math.ceil(gameBoard.width() / 2 - size / 2),
-            Math.ceil(gameBoard.height() / 2 - size / 2),
-            speed,
-            size
-        );
+    function addSquare(square) {
+        square.posX = Math.ceil(gameBoard.width() / 2 - square.size / 2);
+        square.posY = Math.ceil(gameBoard.height() / 2 - square.size / 2)
 
-        addSquareToHtml(newSquare, location);
-
-        return newSquare;
+        addSquareToHtml(square);
     }
 
-    function addSquareToHtml(square, location) {
+    function addSquareToHtml(square) {
         newSquare = $("<div/>").css({
             "width": square.size + "px",
             "height": square.size + "px",
@@ -34,7 +26,7 @@ class Square {
             "position": "absolute",
             "left": square.posX + "px",
             "top": square.posY + "px",
-        }).attr("id", square.id).appendTo(location);
+        }).attr("id", square.id).appendTo(square.location);
     }
 
 // For moving the square

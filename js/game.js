@@ -1,9 +1,12 @@
 $(document).ready(function () {
-    initializeEverything();
-    startInterval(redBalls);
-    startInterval(yellowBalls);
-    startCollision(redBalls, 25);
-    startCollision(yellowBalls, 25);
+    var start = confirm("Red Ball -> +1 point\nYellow Ball -> -1 point and reposition Red Ball\nBlack Ball -> -1 life\nWhen all the yellow balls have spawned, they will start to grow in size.\nWhen one of the yellow balls has reached the maximum size, black balls will start to appear.\nYou have 60 seconds. Good Luck! ;)");
+    if (start === true) {
+        initializeEverything();
+        startInterval(redBalls);
+        startInterval(yellowBalls);
+        startCollision(redBalls, 25);
+        startCollision(yellowBalls, 25);
+    }
 });
 
 function log(message) {
